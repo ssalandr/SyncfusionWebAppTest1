@@ -1,0 +1,224 @@
+@page
+@model WebAPIAdaptorFilterBarModel
+@{
+    ViewData["Title"] = "UrlAdaptor";
+
+    /* WORKS ONLY WITH FILTER type = "FilterBar" */
+    /* in HTML TAG HELPER: filterBarTemplate="templateOptionsDropDown" */
+    var templateOptionsNumericTextBox = new { create = "numericCreate", write = "numericWrite" };
+    var templateOptionsDropDown = new { create = "dropDownCreate", write = "dropDownWrite" };
+    var templateOptionsComboBox = new { create = "comboBoxCreate", write = "comboBoxWrite" };
+    var templateOptionsDatePicker = new { create = "datePickerCreate", write = "datePickerWrite" };
+    var templateOptionsCheckBox = new { create = "checkBoxCreate", write = "checkBoxWrite" };
+
+    var stringOperator = new[] {
+        new { value = "startsWith", text = "Starts With" },
+        // new { value = "endsWith", text = "Ends With" },
+        // new { value = "contains", text = "Contains" },
+        new { value = "equal", text = "Equal" },
+        // new { value = "notEqual", text = "Not Equal" }
+    };
+}
+
+@* immediateModeDelay="2000" *@
+@* ShowFilterBarStatus: Shows or hides the filtered status message on the pager *@
+@* <e-grid-filterSettings type="FilterBar"
+                       mode="OnEnter"
+                       showFilterBarStatus="false" showFilterBarOperator="true">
+</e-grid-filterSettings> *@
+
+<div id="ControlRegion">
+    <ejs-grid id="DataGrid"
+              actionFailure="actionFailure"
+              allowPaging="true"
+              allowSorting="true"
+              allowResizing="true"
+              allowFiltering="true"
+              allowGrouping="true"
+              toolbar="@(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel","Search" })">
+        <e-data-manager url="/api/Grid" adaptor="WebApiAdaptor"></e-data-manager>
+        <e-grid-editSettings allowAdding="true" allowDeleting="true" allowEditing="true" mode="Normal"></e-grid-editSettings>
+        <e-grid-pagesettings pageSize="5" pageCount="5"></e-grid-pagesettings>
+        <e-grid-columns>
+            <e-grid-column field="OrderID" headerText="Order ID" isPrimaryKey="true" textAlign="Right" width="120" filterBarTemplate="templateOptionsComboBox"></e-grid-column>
+            <e-grid-column field="CustomerID" headerText="Customer ID" width="150" filterBarTemplate="templateOptionsDropDown"></e-grid-column>
+            <e-grid-column field="EmployeeID" headerText="Employee ID" textAlign="Right" width="120"></e-grid-column>
+            <e-grid-column field="Freight" headerText="Freight" textAlign="Right" format="C2" width="140" filterBarTemplate="templateOptionsNumericTextBox" showClearButton="true"></e-grid-column>
+            <e-grid-column field="ShipCity" headerText="Ship City" width="150"></e-grid-column>
+            <e-grid-column field="OrderDate" headerText="Order Date" width="130" textAlign="Right" format="yMd" type="date" editType="datepickeredit" filterBarTemplate="templateOptionsDatePicker"></e-grid-column>
+            <e-grid-column field="Verified" headerText="Verified" displayAsCheckBox="true" textAlign="Center" width="150" filterBarTemplate="templateOptionsCheckBox"></e-grid-column>
+        </e-grid-columns>
+    </ejs-grid>
+</div>
+
+<script>
+    function handleFilterChange  (args){
+        var grid = document.getElementById("DataGrid").ej2_instances[0];
+        var targetElement = ej.grids.parentsUntil(args.element, 'e-filtertext');
+        var columnName = targetElement.id.replace('_filterBarcell', '');
+        if (args.value) {
+            grid.filterByColumn(columnName, 'equal', args.value);
+        } else {
+            grid.removeFilteredColsByField(columnName);
+        }
+    }
+
+    //#region Checkbox Filter for OrderID - BEGIN -
+    // var checkElement;
+    // function checkBoxCreate(){
+    //     checkElement = document.createElement('input');
+    //     checkElement.id = 'Verified';
+    //     return checkElement;
+    // }
+    // function checkBoxWrite(args) {
+    //     var checkBox = new ej.buttons.CheckBox({
+    //         cssClass: 'position-relative start-50 translate-middle-x',
+    //         checked: true
+    //     });
+    //     checkBox.appendTo(checkElement);
+    // }
+    // function handleVerifiedFilterChange(args) {
+    //     var grid = document.getElementById("DataGrid").ej2_instances[0];
+    //     if (args.value) {
+    //         grid.filterByColumn("Verified", 'equal', args.value);
+    //     } else {
+    //         grid.removeFilteredColsByField("Verified");
+    //     }
+    // }
+    var checkComboElement;
+    var trueFalseData = [
+        { id: 'true', text: 'True' },
+        { id: 'false', text: 'False' }
+    ];
+    function checkBoxCreate(){
+        checkComboElement = document.createElement('select');
+        checkComboElement.id = 'Verified';
+        var option = document.createElement('option');
+        option.value = '--both--';
+        option.innerText = 'All';
+        checkComboElement.appendChild(option);
+        trueFalseData.forEach((item) => {
+            var option = document.createElement('option');
+            option.value = item.id;
+            option.innerText = item.text;
+            checkComboElement.appendChild(option);
+        });
+        return checkComboElement;
+    }
+    function checkBoxWrite(args) {
+        var checkComboElementList  = new ej.dropdowns.DropDownList({
+            change: (args) => {
+                var grid = document.getElementById("DataGrid").ej2_instances[0];
+                if (args.value !== '--both--') {
+                    grid.filterByColumn(args.item.parentElement.id.replace('_options', ''), 'equal', args.value);
+                } else {
+                    grid.removeFilteredColsByField(args.item.parentElement.id.replace('_options', ''));
+                }
+            }
+        });
+        checkComboElementList .appendTo(checkComboElement);
+    }
+    //#endregion Checkbox Filter for OrderID - END -
+
+    //#region DropDown Filter for OrderID - BEGIN -
+    var comboElement;
+    var filterComboData = [ 'All', 'Base', 'Replace', 'Delta' ];
+    function comboBoxCreate(){
+        comboElement = document.createElement('input');
+        comboElement.id = 'OrderID';
+        return comboElement;
+    }
+    function comboBoxWrite(args) {
+        var comboBox = new ej.dropdowns.ComboBox({
+            value: args.value,
+            placeholder: 'Select an Order Id',
+            change: handleFilterChange,
+            dataSource: filterComboData,
+        });
+        comboBox.appendTo(comboElement);
+    }
+    //#endregion ComboBox Filter for OrderID - END -
+
+    //#region DropDown Filter for CustomerID - BEGIN -
+    var dropDown;
+    var filterDropData = [
+        { CustomerID: 'Customer 1' },
+        { CustomerID: 'Customer 2' },
+        { CustomerID: 'Customer 3' },
+        { CustomerID: 'Customer 4' }
+    ];
+    function dropDownCreate() {
+        dropDown = document.createElement('select');
+        dropDown.id = 'CustomerID';
+        var option = document.createElement('option');
+        option.value = 'All';
+        option.innerText = 'All';
+        dropDown.appendChild(option);
+        filterDropData.forEach((item) => {
+            var option = document.createElement('option');
+            option.value = item.CustomerID;
+            option.innerText = item.CustomerID;
+            dropDown.appendChild(option);
+        });
+        return dropDown;
+    }
+
+    function dropDownWrite() {
+        var dropDownList  = new ej.dropdowns.DropDownList({
+            change: (args) => {
+                var grid = document.getElementById("DataGrid").ej2_instances[0];
+                if (args.value !== 'All') {
+                    grid.filterByColumn(args.item.parentElement.id.replace('_options', ''), 'equal', args.value);
+                } else {
+                    grid.removeFilteredColsByField(args.item.parentElement.id.replace('_options', ''));
+                }
+            }
+        });
+        dropDownList .appendTo(dropDown);
+    }
+    //#endregion DropDown Filter for CustomerID - END -
+
+    //#region NumericTextBox Filter for Freight - BEGIN -
+    var numericElement;
+    function numericCreate(){
+        numericElement = document.createElement('input');
+        return numericElement;
+    }
+    function numericWrite(args){
+        var numericTextBox = new ej.inputs.NumericTextBox({
+            format: '00.00',
+            value: 10,
+            change: testfunc,
+        });
+        numericTextBox.appendTo(numericElement);
+    }
+    function testfunc(args) {
+        var grid = document.getElementById("DataGrid").ej2_instances[0];
+        if (args.value) {
+            grid.filterByColumn("Freight", 'equal', args.value);
+        } else {
+            grid.removeFilteredColsByField("Freight");
+        }
+    }
+    //#endregion NumericTextBox Filter for Freight - END -
+
+    //#region DatePicker Filter for OrderDate - BEGIN -
+    var dateElement;
+    function datePickerCreate(){
+         dateElement = document.createElement('input');
+         return dateElement;
+     }
+     function datePickerWrite (args){
+         var datePickerObject = new ej.calendars.DatePicker({
+             value: new Date(args.column.field),
+             change: handleFilterChange,
+         });
+         datePickerObject.appendTo(dateElement);
+     }
+    //#endregion DatePicker Filter for OrderDate - END -
+
+    function actionFailure(args) {
+        console.log(`actionFailure: ${args.requestType}`);
+        console.log(args);
+    }
+</script>

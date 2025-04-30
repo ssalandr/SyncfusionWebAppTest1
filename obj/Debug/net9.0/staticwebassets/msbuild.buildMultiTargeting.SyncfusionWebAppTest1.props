@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\SyncfusionWebAppTest1.props" />
+</Project>

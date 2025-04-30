@@ -1,0 +1,36 @@
+@page
+@model WebAPIAdaptorBasicFilterBarModel
+@{
+    ViewData["Title"] = "UrlAdaptor";
+}
+
+<div id="ControlRegion">
+    <ejs-grid id="DataGrid"
+              actionFailure="actionFailure"
+              allowPaging="true"
+              allowSorting="true"
+              allowResizing="true"
+              allowFiltering="true"
+              allowGrouping="true"
+              toolbar="@(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel","Search" })">
+        <e-data-manager url="/api/Grid" adaptor="WebApiAdaptor"></e-data-manager>
+        <e-grid-editSettings allowAdding="true" allowDeleting="true" allowEditing="true" mode="Normal"></e-grid-editSettings>
+        <e-grid-pagesettings pageSize="5" pageCount="5"></e-grid-pagesettings>
+        <e-grid-columns>
+            <e-grid-column field="OrderID" headerText="Order ID" isPrimaryKey="true" textAlign="Right" width="120"></e-grid-column>
+            <e-grid-column field="CustomerID" headerText="Customer ID" width="150"></e-grid-column>
+            <e-grid-column field="EmployeeID" headerText="Employee ID" textAlign="Right" width="120"></e-grid-column>
+            <e-grid-column field="Freight" headerText="Freight" textAlign="Right" format="C2" width="140"></e-grid-column>
+            <e-grid-column field="ShipCity" headerText="Ship City" width="150"></e-grid-column>
+            <e-grid-column field="OrderDate" headerText="Order Date" width="130" textAlign="Right" format="yMd" type="date" editType="datepickeredit"></e-grid-column>
+            <e-grid-column field="Verified" headerText="Verified" displayAsCheckBox="true" textAlign="Center" width="150"></e-grid-column>
+        </e-grid-columns>
+    </ejs-grid>
+</div>
+
+<script>
+    function actionFailure(args) {
+        console.log(`actionFailure: ${args.requestType}`);
+        console.log(args);
+    }
+</script>

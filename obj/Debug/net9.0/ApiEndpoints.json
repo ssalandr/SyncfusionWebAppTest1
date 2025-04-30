@@ -1,0 +1,231 @@
+[
+  {
+    "ContainingType": "WebApiAdaptor.Controllers.GridController",
+    "Method": "Get",
+    "RelativePath": "api/Grid",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApiAdaptor.Controllers.GridController",
+    "Method": "Post",
+    "RelativePath": "api/Grid",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newRecord",
+        "Type": "SyncfusionWebAppTest1.Models.OrdersDetails",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApiAdaptor.Controllers.GridController",
+    "Method": "Put",
+    "RelativePath": "api/Grid",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "order",
+        "Type": "SyncfusionWebAppTest1.Models.OrdersDetails",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApiAdaptor.Controllers.GridController",
+    "Method": "Delete",
+    "RelativePath": "api/Grid/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApiAdaptor.Controllers.GridCopilotController",
+    "Method": "Get",
+    "RelativePath": "api/GridCopilot",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApiAdaptor.Controllers.GridCopilotController",
+    "Method": "Post",
+    "RelativePath": "api/GridCopilot",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newRecord",
+        "Type": "SyncfusionWebAppTest1.Models.OrdersDetails",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApiAdaptor.Controllers.GridCopilotController",
+    "Method": "Put",
+    "RelativePath": "api/GridCopilot",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "order",
+        "Type": "SyncfusionWebAppTest1.Models.OrdersDetails",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApiAdaptor.Controllers.GridCopilotController",
+    "Method": "Delete",
+    "RelativePath": "api/GridCopilot/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApiAdaptor.Controllers.GridUrlController",
+    "Method": "Post",
+    "RelativePath": "api/GridUrl",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "DataManagerRequest",
+        "Type": "Syncfusion.EJ2.Base.DataManagerRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApiAdaptor.Controllers.GridUrlController",
+    "Method": "Insert",
+    "RelativePath": "api/GridUrl/Insert",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newRecord",
+        "Type": "Syncfusion.EJ2.Base.CRUDModel\u00601[[SyncfusionWebAppTest1.Models.OrdersDetails, SyncfusionWebAppTest1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebApiAdaptor.Controllers.GridUrlController",
+    "Method": "Remove",
+    "RelativePath": "api/GridUrl/Remove",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "deletedRecord",
+        "Type": "Syncfusion.EJ2.Base.CRUDModel\u00601[[SyncfusionWebAppTest1.Models.OrdersDetails, SyncfusionWebAppTest1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebApiAdaptor.Controllers.GridUrlController",
+    "Method": "Update",
+    "RelativePath": "api/GridUrl/Update",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "updatedRecord",
+        "Type": "Syncfusion.EJ2.Base.CRUDModel\u00601[[SyncfusionWebAppTest1.Models.OrdersDetails, SyncfusionWebAppTest1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SyncfusionWebAppTest1.Controllers.WeatherForecastController",
+    "Method": "Get",
+    "RelativePath": "WeatherForecast",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[SyncfusionWebAppTest1.WeatherForecast, SyncfusionWebAppTest1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "GetWeatherForecast"
+  }
+]

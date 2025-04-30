@@ -1,0 +1,246 @@
+@page
+@model UrlAdaptorCustomMenuBarModel
+@{
+    ViewData["Title"] = "UrlAdaptor";
+
+    var filteruiTemplate = new
+    {
+        ui = new
+        {
+            create = "createCustomFilter",
+            write = "writeCustomFilter",
+            read = "readCustomFilter"
+        },
+        @operator = "equal" // <<<--- default operator
+    };
+
+    var filterTrueFalseUITemplate = new
+    {
+        ui = new
+        {
+            create = "createTrueFalseCustomFilter",
+            write = "writeTrueFalseCustomFilter",
+            read = "readTrueFalseCustomFilter"
+        },
+        @operator = "equal" // <<<--- default operator
+    };
+
+    // e-grid-filterSettings type="Menu"
+    var stringOperator = new[] {
+        new { value = "startsWith", text = "Starts With" },
+        // new { value = "endsWith", text = "Ends With" },
+        // new { value = "contains", text = "Contains" },
+        new { value = "equal", text = "Equal" },
+        // new { value = "notEqual", text = "Not Equal" }
+    };
+    var numberOperator = new[] {
+        new { value = "equal", text = "Equal" },
+        new { value = "notEqual", text = "Not Equal" },
+        new { value = "greaterThan", text = "Greater Than" },
+        new { value = "lessThan", text = "Less Than" }
+    };
+    var dateOperator = new[] {
+        new { value = "equal", text = "Equal" },
+        new { value = "notEqual", text = "Not Equal" },
+        new { value = "greaterThanOrEqual", text = "After" },
+        // new { value = "greaterThan", text = "After" },
+        // new { value = "lessThan", text = "Before" }
+    };
+    var booleanOperator = new[] {
+        new { value = "equal", text = "Equal" },
+        new { value = "notEqual", text = "Not Equal" }
+    };
+}
+@* dataBound="bound" *@ 
+@* <e-grid-filterSettings type="Menu"
+                       operators="@(new { stringOperator = stringOperator, numberOperator = numberOperator, dateOperator = dateOperator, booleanOperator = booleanOperator })"
+                       mode="OnEnter">
+</e-grid-filterSettings> *@
+
+<div id="ControlRegion">
+    <ejs-grid id="DataGrid"
+              dataBound="bound"
+              actionFailure="actionFailure"
+              allowPaging="true"
+              allowSorting="true"
+              allowResizing="true"
+              allowFiltering="true"
+              toolbar="@(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel","Search" })">
+        <e-data-manager url="/api/GridUrl"
+                        insertUrl="/api/GridUrl/Insert"
+                        updateUrl="/api/GridUrl/Update"
+                        removeUrl="/api/GridUrl/Remove"
+                        adaptor="UrlAdaptor">
+        </e-data-manager>
+        <e-grid-editSettings allowAdding="true"
+                             allowDeleting="true"
+                             allowEditing="true"
+                             mode="Normal">
+        </e-grid-editSettings>
+        <e-grid-filterSettings type="Menu"
+                               operators="@(new { stringOperator = stringOperator, numberOperator = numberOperator, dateOperator = dateOperator, booleanOperator = booleanOperator })">
+        </e-grid-filterSettings>
+        <e-grid-pagesettings pageCount="5"></e-grid-pagesettings>
+        <e-grid-columns>
+            <e-grid-column field="OrderID" headerText="Order ID" isPrimaryKey="true" textAlign="Right" width="120"></e-grid-column>
+            <e-grid-column field="CustomerID" headerText="Customer ID" width="150" filter="filteruiTemplate"></e-grid-column>
+            <e-grid-column field="EmployeeID" headerText="Employee ID" textAlign="Right" width="120"></e-grid-column>
+            <e-grid-column field="Freight" headerText="Freight" textAlign="Right" format="C2" width="140"></e-grid-column>
+            <e-grid-column field="ShipCity" headerText="Ship City" width="150"></e-grid-column>
+            <e-grid-column field="OrderDate" headerText="Order Date" width="130" textAlign="Right" format="yMd" type="date" editType="datepickeredit"></e-grid-column>
+            <e-grid-column field="Verified" headerText="Verified" displayAsCheckBox="true" textAlign="Center" width="150" filter="filterTrueFalseUITemplate"></e-grid-column>
+        </e-grid-columns>
+    </ejs-grid>
+</div>
+
+<script>
+
+    ej.base.enableRipple(true);
+
+    function bound(args) {
+        var inputObj;
+        var elem;
+        [4].forEach(index => {
+            this.columns[index].filter.ui = {
+                create: (args) => {
+                    elem = document.createElement('input');
+                    args.target.appendChild(elem);
+                    inputObj = new ej.inputs.Input.createInput({
+                        floatLabelType: 'Never',
+                        element: elem
+                    });
+                },
+                read: (args) => {
+                    args.fltrObj.filterByColumn(args.column.field, args.operator, args.element.value);
+                },
+                write: (args) => {
+                    elem.value = args.filteredValue || '';
+
+                }
+            }
+        });
+
+        // this.columns[5].filter.ui = {
+        //     create: (args) => {
+        //         elem = document.createElement('input');
+        //         args.target.appendChild(elem);
+        //         inputObj = new ej.calendars.DatePicker({
+        //             placeholder: 'Select a date',
+        //             format: 'M/d/yyyy'
+        //         });
+        //         inputObj.appendTo(elem);
+        //     },
+        //     read: (args) => {
+        //         const operator = args.operator || 'equal'; // Default to 'equal' if no operator is selected
+        //         const dateValue = new Date(args.element.value).toISOString(); // Convert to ISO format
+        //         args.fltrObj.filterByColumn(args.column.field, operator, dateValue);
+        //         // args.fltrObj.filterByColumn(args.column.field, args.operator, args.element.value);
+        //      },
+        //     write: (args) => {
+        //         elem.value = args.filteredValue || '';
+        //     }
+        // };
+
+        customFilter(args);
+     }
+
+    //#region DOES NOT WORK WITH FILTER type = "FilterBar" */
+    function customFilter(args) {
+        var grid = document.getElementById("DataGrid").ej2_instances[0];
+        let column = grid.getColumnByField("OrderID");
+        let columnFilterSettings = { type: "CheckBox" };
+        column.filter = columnFilterSettings;
+        //grid.refreshColumns();
+
+        column = grid.getColumnByField("ShipCity");
+        columnFilterSettings = { type: "Excel" };
+        column.filter = columnFilterSettings;
+
+        column = grid.getColumnByField("OrderDate");
+        columnFilterSettings = { operator: "greaterThanOrEqual" }; // <<<--- custom dateOperator, value changed
+        // columnFilterSettings = { operator: "greaterThanOrEqual".toLowerCase() };
+        column.filter = columnFilterSettings;
+
+        // column = grid.getColumnByField("Verified");
+        // columnFilterSettings = { type: "CheckBox" };
+        // column.filter = columnFilterSettings;
+
+        // //grid.refreshColumns();
+
+    }
+    //#endregion
+
+    /* OrderID - DropDown - Should not be used in bound (array columns) for overwriting default input behsviour */
+        var filterCustomDropData = [
+        { Type: 'All' },
+        { Type: 'Base' },
+        { Type: 'Replace' },
+        { Type: 'Delta' }
+    ];
+    let dropInstance;
+    function createCustomFilter(args) {
+        console.log("createCustomFilter");
+
+        // <<<--- Selecting a default operator in cusomFilter function
+        document.querySelector(".e-flm_optrdiv").style.display = 'none'; // <<<---
+        document.querySelector(".e-flmenu-valuediv").style.paddingTop = "0"; // <<<---
+
+        var filterInputElement = new ej.base.createElement('input', { className: 'filter-input' });
+        args.target.appendChild(filterInputElement);
+        dropInstance = new ej.dropdowns.DropDownList({
+            dataSource: new ej.data.DataManager(filterCustomDropData),
+            fields: { text: 'Type', value: 'Type' },
+            placeholder: 'Select a value',
+            popupHeight: '200px'
+        });
+        dropInstance.appendTo(filterInputElement);
+    }
+    function writeCustomFilter(args) {
+        console.log("writeCustomFilter");
+        dropInstance.value = args.filteredValue;
+    }
+    function readCustomFilter(args) {
+        console.log(`readCustomFilter: ${args.column.field}`);
+        args.fltrObj.filterByColumn(args.column.field, args.operator, dropInstance.value);
+    }
+    //#endregion
+
+    /* Verified - dropDown - True|False */
+        var filterCustomTrueFalseData = [
+        { Type: 'All' },
+        { Type: 'True' },
+        { Type: 'False' }
+    ];
+    let dropTrueFalseInstance;
+    function createTrueFalseCustomFilter(args) {
+        console.log("createCustomFilter");
+
+        // <<<--- Selecting a default operator in cusomFilter function
+        document.querySelector(".e-flm_optrdiv").style.display = 'none'; // <<<---
+        document.querySelector(".e-flmenu-valuediv").style.paddingTop = "0"; // <<<---
+
+        var filterInputElement = new ej.base.createElement('input', { className: 'filter-input' });
+        args.target.appendChild(filterInputElement);
+        dropTrueFalseInstance = new ej.dropdowns.DropDownList({
+            dataSource: new ej.data.DataManager(filterCustomTrueFalseData),
+            fields: { text: 'Type', value: 'Type' },
+            placeholder: 'Select a value',
+            popupHeight: '200px'
+        });
+        dropTrueFalseInstance.appendTo(filterInputElement);
+    }
+    function writeTrueFalseCustomFilter(args) {
+        console.log("writeCustomFilter");
+        dropTrueFalseInstance.value = args.filteredValue;
+    }
+    function readTrueFalseCustomFilter(args) {
+        console.log(`readCustomFilter: ${args.column.field}`);
+        args.fltrObj.filterByColumn(args.column.field, args.operator, dropTrueFalseInstance.value);
+    }
+    //#endregion
+
+    function actionFailure(args) {
+        console.log(`actionFailure: ${args.requestType}`);
+        console.log(args);
+    }
+</script>
