@@ -1,0 +1,33 @@
+{
+    "configurations": [
+      {
+        "type": "coreclr",
+        "request": "launch",
+        "name": "Launch SyncfusionWebAppTest1",
+        "program": "${input:outputDllPath}",
+        "args": [],
+        "cwd": "${workspaceFolder}",
+        "stopAtEntry": false,
+        "serverReadyAction": {
+          "action": "openExternally",
+          "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+          "uriFormat": "%s"
+        },
+        "env": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        },
+        "preLaunchTask": "build"
+      }
+    ],
+    "inputs": [
+      {
+        "id": "outputDllPath",
+        "type": "pickString",
+        "description": "Select the path to your compiled .NET application",
+        "options": [
+          "${workspaceFolder}/bin/Debug/net9.0/SyncfusionWebAppTest1.dll",
+          "${workspaceFolder}/bin/Release/net9.0/SyncfusionWebAppTest1.dll"
+        ]
+      }
+    ]
+  }

@@ -104,3 +104,4 @@ C:\wa\Projects\WiP\repos-prj\__Components\Syncfusion\ASP.NET_Core\SyncfusionWebA
 C:\wa\Projects\WiP\repos-prj\__Components\Syncfusion\ASP.NET_Core\SyncfusionWebAppTest1\SyncfusionWebAppTest1\bin\Debug\net9.0\Newtonsoft.Json.dll
 C:\wa\Projects\WiP\repos-prj\__Components\Syncfusion\ASP.NET_Core\SyncfusionWebAppTest1\SyncfusionWebAppTest1\bin\Debug\net9.0\Syncfusion.EJ2.dll
 C:\wa\Projects\WiP\repos-prj\__Components\Syncfusion\ASP.NET_Core\SyncfusionWebAppTest1\SyncfusionWebAppTest1\bin\Debug\net9.0\Syncfusion.Licensing.dll
+C:\wa\Projects\WiP\repos-prj\__Components\Syncfusion\ASP.NET_Core\SyncfusionWebAppTest1\SyncfusionWebAppTest1\obj\Debug\net9.0\SyncfusionWebAppTest1.sourcelink.json
