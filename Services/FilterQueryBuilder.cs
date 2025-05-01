@@ -33,7 +33,7 @@ namespace SyncfusionWebAppTest1.Services
                     var orExpressions = new List<Expression<Func<T, bool>>>();
                     foreach (var condition in group.Conditions)
                     {
-                        orExpressions.Add(BuildExpression<T>(condition));
+                        orExpressions.Add(BuildExpression(condition));
                     }
                     query = query.Where(CombineOrExpressions(orExpressions));
                 }
@@ -42,7 +42,7 @@ namespace SyncfusionWebAppTest1.Services
                     // Handle AND conditions - each condition is applied with AND logic
                     foreach (var condition in group.Conditions)
                     {
-                        var expression = BuildExpression<T>(condition);
+                        var expression = BuildExpression(condition);
                         query = query.Where(expression);
                     }
                 }
@@ -57,7 +57,7 @@ namespace SyncfusionWebAppTest1.Services
         /// <typeparam name="T">The entity type the expression is for</typeparam>
         /// <param name="condition">The filter condition to convert to an Expression</param>
         /// <returns>A lambda expression representing the filter condition</returns>
-        private static Expression<Func<T, bool>> BuildExpression<T>(FilterCondition condition)
+        private static Expression<Func<T, bool>> BuildExpression(FilterCondition condition)
         {
             // Create a parameter expression for the entity
             var parameter = Expression.Parameter(typeof(T), "x");
@@ -131,7 +131,7 @@ namespace SyncfusionWebAppTest1.Services
         /// <typeparam name="T">The entity type the expressions are for</typeparam>
         /// <param name="expressions">The list of expressions to combine with OR</param>
         /// <returns>A single expression that combines all expressions with OR logic</returns>
-        private static Expression<Func<T, bool>> CombineOrExpressions<T>(List<Expression<Func<T, bool>>> expressions)
+        private static Expression<Func<T, bool>> CombineOrExpressions(List<Expression<Func<T, bool>>> expressions)
         {
             // If no expressions provided, return a default "true" expression
             if (!expressions.Any())

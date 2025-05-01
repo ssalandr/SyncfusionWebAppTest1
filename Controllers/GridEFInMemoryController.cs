@@ -53,15 +53,15 @@ public class GridEFInMemoryController : ControllerBase
                 if (isFirstSort)
                 {
                     orderedQuery = sortOrder
-                        ? orderedQuery.OrderByDescending(sortBy)
-                        : orderedQuery.OrderBy(sortBy);
+                        ? orderedQuery.OrderByDescending(x => EF.Property<object>(x, sortBy))
+                        : orderedQuery.OrderBy(x => EF.Property<object>(x, sortBy));
                     isFirstSort = false;
                 }
                 else
                 {
                     orderedQuery = sortOrder
-                        ? ((IOrderedQueryable<OrdersDetails>)orderedQuery).ThenByDescending(sortBy)
-                        : ((IOrderedQueryable<OrdersDetails>)orderedQuery).ThenBy(sortBy);
+                        ? ((IOrderedQueryable<OrdersDetails>)orderedQuery).ThenByDescending(x => EF.Property<object>(x, sortBy))
+                        : ((IOrderedQueryable<OrdersDetails>)orderedQuery).ThenBy(x => EF.Property<object>(x, sortBy));
                 }
             }
 

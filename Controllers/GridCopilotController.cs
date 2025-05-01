@@ -12,9 +12,9 @@ public class GridCopilotController : ControllerBase
 {
     public class FilterCriteria
     {
-        public string Field { get; set; }
-        public string Operator { get; set; }
-        public object Value { get; set; }
+        public required string Field { get; set; }
+        public required string Operator { get; set; }
+        public required object Value { get; set; }
     }
 
     private List<FilterCriteria> ParseFilters(string filter)
@@ -75,7 +75,7 @@ public class GridCopilotController : ControllerBase
                 {
                     Field = parts[0],
                     Operator = parts[1],
-                    Value = parts.Length > 2 ? parts[2] : null
+                    Value = parts.Length > 2 ? parts[2] : string.Empty
                 });
             }
         }
@@ -96,7 +96,7 @@ public class GridCopilotController : ControllerBase
         Trace.WriteLine($"Filter: {filter}");
 
         // Parse filters
-        var filterGroups = FilterParser.ParseFilterString(filter);
+        var filterGroups = FilterParser.ParseFilterString(filter ?? string.Empty);
 
         // Apply filters
         if (filterGroups.Any())
@@ -197,15 +197,15 @@ public class GridCopilotController : ControllerBase
             FilterOperator.GreaterThanOrEqual => data.Where(x => x.OrderDate >= dateValue).ToList(),
             FilterOperator.LessThan => data.Where(x => x.OrderDate < dateValue).ToList(),
             FilterOperator.LessThanOrEqual => data.Where(x => x.OrderDate <= dateValue).ToList(),
-            FilterOperator.IsNull => data.Where(x => x.OrderDate == null).ToList(),
-            FilterOperator.IsNotNull => data.Where(x => x.OrderDate != null).ToList(),
+            //FilterOperator.IsNull => data.Where(x => x.OrderDate == null).ToList(),
+            //FilterOperator.IsNotNull => data.Where(x => x.OrderDate != null).ToList(),
             _ => data
         };
     }
 
     private List<OrdersDetails> ApplyTextFilter(List<OrdersDetails> data, FilterCondition condition)
     {
-        var value = condition.Value.ToString().ToLower();
+        var value = condition.Value?.ToString()?.ToLower() ?? string.Empty;
         return condition.Operator switch
         {
             FilterOperator.Equals => data.Where(x => x.CustomerID.ToLower() == value).ToList(),
