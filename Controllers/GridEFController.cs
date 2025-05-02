@@ -17,13 +17,13 @@ namespace WebApiAdaptor.Controllers;
 [ApiController]
 public class GridEFController : ControllerBase
 {
-    private readonly YourDbContext _context;
+    private readonly SyncTestDbContext _context;
 
     /// <summary>
     /// Initializes a new instance of the GridEFController with the specified database context.
     /// </summary>
     /// <param name="context">The database context for accessing OrdersDetails data</param>
-    public GridEFController(YourDbContext context)
+    public GridEFController(SyncTestDbContext context)
     {
         _context = context;
     }

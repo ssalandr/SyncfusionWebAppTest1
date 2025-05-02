@@ -13,9 +13,9 @@ namespace WebApiAdaptor.Controllers;
 /// GridEFInMemoryController
 public class GridController : ControllerBase
 {
-    private readonly YourDbContext _context;
+    private readonly SyncTestDbContext _context;
 
-    public GridController(YourDbContext context)
+    public GridController(SyncTestDbContext context)
     {
         _context = context;
     }

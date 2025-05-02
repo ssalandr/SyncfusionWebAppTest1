@@ -32,13 +32,13 @@ namespace SyncfusionWebAppTest1.Services
             {
                 // This is a NotEqual date condition - extract field and date value
                 var field = notEqualDateMatch.Groups[1].Value;
-                var date1 = DateTime.Parse(notEqualDateMatch.Groups[4].Value).Subtract(new TimeSpan(1, 0, 0, 0));
+                var date1 = DateTime.Parse(notEqualDateMatch.Groups[4].Value);  //.Subtract(new TimeSpan(1, 0, 0, 0));
 
                 currentGroup.Conditions.Add(new FilterCondition
                 {
                     Field = field,
                     Operator = FilterOperator.NotEquals,
-                    Value = date1,
+                    Value = date1.ToUniversalTime(),
                     IsDate = true
                 });
                 filterGroups.Add(currentGroup);
@@ -155,7 +155,7 @@ namespace SyncfusionWebAppTest1.Services
             {
                 Field = field,
                 Operator = GetDateOperator(op), // Convert OData operator to FilterOperator enum
-                Value = DateTime.Parse(dateStr),
+                Value = DateTime.Parse(dateStr).ToUniversalTime(),
                 IsDate = true
             };
         }
@@ -236,13 +236,17 @@ namespace SyncfusionWebAppTest1.Services
             var op = match.Groups[2].Value;
             var value = match.Groups[3].Value;
 
-            return new FilterCondition
+            //return new FilterCondition
+            var num = new FilterCondition
             {
                 Field = field,
                 Operator = GetNumericOperator(op), // Convert OData operator to FilterOperator enum
-                Value = decimal.Parse(value),
+
+                Value = decimal.Parse(value, System.Globalization.CultureInfo.InvariantCulture),
                 IsNumber = true
             };
+
+            return num;
         }
 
         /// <summary>

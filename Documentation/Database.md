@@ -7,9 +7,9 @@ This document provides information about the database structure and Entity Frame
 The application uses Entity Framework Core with the following context:
 
 ```csharp
-public class YourDbContext : DbContext
+public class SyncTestDbContext : DbContext
 {
-    public YourDbContext(DbContextOptions<YourDbContext> options)
+    public SyncTestDbContext(DbContextOptions<SyncTestDbContext> options)
         : base(options)
     {
     }
@@ -41,17 +41,17 @@ public class OrdersDetails
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=SyncfusionWebAppTest1;Trusted_Connection=True;MultipleActiveResultSets=true"
+    "DefaultConnection": "Host=localhost;Port=5432;Database=SyncfusionTest;Username=pgrpfs;Password=lxVa8AAxei1Qnhw5LCNF;Include Error Detail=true;"
   }
 }
 ```
 
 ### Entity Framework Configuration
 ```csharp
-services.AddDbContext<YourDbContext>(options =>
-    options.UseSqlServer(
+services.AddDbContext<SyncTestDbContext>(options =>
+    options.UseNpgsql(
         Configuration.GetConnectionString("DefaultConnection"),
-        b => b.MigrationsAssembly("SyncfusionWebAppTest1")));
+        npgsqlOptions => npgsqlOptions.MigrationsAssembly("SyncfusionWebAppTest1")));
 ```
 
 ## Migrations

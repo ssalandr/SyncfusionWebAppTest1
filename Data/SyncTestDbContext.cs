@@ -3,9 +3,9 @@ using SyncfusionWebAppTest1.Models;
 
 namespace SyncfusionWebAppTest1.Data
 {
-    public class YourDbContext : DbContext
+    public class SyncTestDbContext : DbContext
     {
-        public YourDbContext(DbContextOptions<YourDbContext> options)
+        public SyncTestDbContext(DbContextOptions<SyncTestDbContext> options)
             : base(options)
         {
         }

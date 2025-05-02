@@ -68,27 +68,45 @@ namespace SyncfusionWebAppTest1.Services
             // Create a constant for the value to compare with
             var value = Expression.Constant(condition.Value);
 
+            // Handle special case for DateTime comparison to ensure proper type conversion
+            if (condition.IsDate && condition.Value is DateTime)
+            {
+                // For DateTime properties, we need special handling
+                if (property.Type == typeof(DateTime) || property.Type == typeof(DateTime?))
+                {
+                    // Handle DateTime conversions properly
+                    var dateValue = (DateTime)condition.Value;
+                    value = Expression.Constant(dateValue, property.Type);
+
+                    // Do not use convertedValue below for DateTime types
+                    return BuildDateTimeExpression(parameter, property, value, condition.Operator);
+                }
+            }
+
+            // Convert value to match property type if needed
+            var convertedValue = Expression.Convert(value, property.Type);
+
             // Build the appropriate expression based on the operator
             Expression body;
             switch (condition.Operator)
             {
                 case FilterOperator.Equals:
-                    body = Expression.Equal(property, value);
+                    body = Expression.Equal(property, convertedValue);
                     break;
                 case FilterOperator.NotEquals:
-                    body = Expression.NotEqual(property, value);
+                    body = Expression.NotEqual(property, convertedValue);
                     break;
                 case FilterOperator.GreaterThan:
-                    body = Expression.GreaterThan(property, value);
+                    body = Expression.GreaterThan(property, convertedValue);
                     break;
                 case FilterOperator.GreaterThanOrEqual:
-                    body = Expression.GreaterThanOrEqual(property, value);
+                    body = Expression.GreaterThanOrEqual(property, convertedValue);
                     break;
                 case FilterOperator.LessThan:
-                    body = Expression.LessThan(property, value);
+                    body = Expression.LessThan(property, convertedValue);
                     break;
                 case FilterOperator.LessThanOrEqual:
-                    body = Expression.LessThanOrEqual(property, value);
+                    body = Expression.LessThanOrEqual(property, convertedValue);
                     break;
                 case FilterOperator.Contains:
                     // For string Contains operation, we need to use the string.Contains method
@@ -122,6 +140,99 @@ namespace SyncfusionWebAppTest1.Services
             }
 
             // Create and return a lambda expression from the body
+            return Expression.Lambda<Func<T, bool>>(body, parameter);
+        }
+
+        /// <summary>
+        /// Builds a DateTime-specific expression to handle date comparisons properly.
+        /// </summary>
+        private static Expression<Func<T, bool>> BuildDateTimeExpression(
+            ParameterExpression parameter,
+            MemberExpression property,
+            ConstantExpression value,
+            FilterOperator filterOperator)
+        {
+            Expression body;
+
+            // For nullable DateTime properties, we need to handle null values
+            bool isNullable = property.Type == typeof(DateTime?);
+
+            // For DateTime.Date comparisons, we need to extract just the date part
+            if (isNullable)
+            {
+                // For nullable DateTime, first check if the property is not null
+                var notNullCheck = Expression.NotEqual(property, Expression.Constant(null, typeof(DateTime?)));
+
+                // Get the Date property of the DateTime value
+                var hasValueProperty = Expression.Property(property, "HasValue");
+                var valueProperty = Expression.Property(property, "Value");
+                var dateProperty = Expression.Property(valueProperty, "Date");
+
+                // Get the Date property of the constant value
+                var dateValue = ((DateTime)value.Value).Date;
+                var constantDate = Expression.Constant(dateValue, typeof(DateTime));
+
+                Expression dateComparison;
+
+                switch (filterOperator)
+                {
+                    case FilterOperator.Equals:
+                        dateComparison = Expression.Equal(dateProperty, constantDate);
+                        break;
+                    case FilterOperator.NotEquals:
+                        dateComparison = Expression.NotEqual(dateProperty, constantDate);
+                        break;
+                    case FilterOperator.GreaterThan:
+                        dateComparison = Expression.GreaterThan(dateProperty, constantDate);
+                        break;
+                    case FilterOperator.GreaterThanOrEqual:
+                        dateComparison = Expression.GreaterThanOrEqual(dateProperty, constantDate);
+                        break;
+                    case FilterOperator.LessThan:
+                        dateComparison = Expression.LessThan(dateProperty, constantDate);
+                        break;
+                    case FilterOperator.LessThanOrEqual:
+                        dateComparison = Expression.LessThanOrEqual(dateProperty, constantDate);
+                        break;
+                    default:
+                        throw new ArgumentException($"Unsupported operator for DateTime comparison: {filterOperator}");
+                }
+
+                // Combine the null check with the date comparison
+                body = Expression.AndAlso(hasValueProperty, dateComparison);
+            }
+            else
+            {
+                // For non-nullable DateTime
+                var dateProperty = Expression.Property(property, "Date");
+                var dateValue = ((DateTime)value.Value).Date;
+                var constantDate = Expression.Constant(dateValue, typeof(DateTime));
+
+                switch (filterOperator)
+                {
+                    case FilterOperator.Equals:
+                        body = Expression.Equal(dateProperty, constantDate);
+                        break;
+                    case FilterOperator.NotEquals:
+                        body = Expression.NotEqual(dateProperty, constantDate);
+                        break;
+                    case FilterOperator.GreaterThan:
+                        body = Expression.GreaterThan(dateProperty, constantDate);
+                        break;
+                    case FilterOperator.GreaterThanOrEqual:
+                        body = Expression.GreaterThanOrEqual(dateProperty, constantDate);
+                        break;
+                    case FilterOperator.LessThan:
+                        body = Expression.LessThan(dateProperty, constantDate);
+                        break;
+                    case FilterOperator.LessThanOrEqual:
+                        body = Expression.LessThanOrEqual(dateProperty, constantDate);
+                        break;
+                    default:
+                        throw new ArgumentException($"Unsupported operator for DateTime comparison: {filterOperator}");
+                }
+            }
+
             return Expression.Lambda<Func<T, bool>>(body, parameter);
         }
 
